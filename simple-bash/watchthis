@@ -1,0 +1,23 @@
+#!/bin/bash
+SLEEP_TIME=$1
+shift
+
+if [[ !(-d "tmp") ]]; then
+    mkdir "tmp"
+fi 
+
+tmp_c="tmp/tmp_c.txt"
+tmp_p="tmp/tmp_p.txt"
+
+touch "$tmp_c"
+touch "$tmp_c"
+echo -n "" > "$tmp_c"
+
+while  :; do
+    mv "$tmp_p" "$tmp_c"
+    $@ > "$tmp_c"
+    cat "$tmp_c"
+    diff -u "$tmp_p" "$tmp_c"
+    
+    sleep $SLEEP_TIME
+done

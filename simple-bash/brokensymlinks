@@ -1,0 +1,32 @@
+#!/bin/bash
+
+function symlink_finder()
+{
+    PATH_="$(dirname "$1")"
+    #echo "PATH1:$PATH_"
+    if [[ "$PATH_" = / ]]; then 
+        PATH_=""
+    fi
+    if [[ -n "$(basename "$1")" ]]; then
+        #echo "PATH12:$PATH_"
+        PATH_="$PATH_/"
+        PATH_="$PATH_$(basename "$1")"
+    fi
+
+    #echo "PATH2:$PATH_"
+    for f_name in "$PATH_"/*; do
+        if [[ -L "$f_name" && !(-e "$f_name") ]]; then
+            echo "$f_name"
+        else
+            if [[ !(-L "$f_name") && -d "$f_name" ]]; then
+                symlink_finder "$f_name"
+            fi
+        fi
+    done
+}
+
+
+for  point in "$@"; do
+    #echo "POINT:$dir"
+    symlink_finder "$point"
+done

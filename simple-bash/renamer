@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#echo "Begin inArg: $@"
+
+for file_name in "$@"
+    do
+        echo "$file_name"
+        read new_name
+        if [[ -n "$new_name" ]]; then
+            if [[ !(-e "$new_name") ]]; then
+                #echo "$file_name $new_name" 
+                mv "$file_name" "$new_name"
+            else
+                echo "new name exist!"
+            fi    
+        fi 
+    done
+#echo "End"
