@@ -10,33 +10,23 @@ char* inBuf;
 char* outBuf;
 int* sepLen;
 int* order;
-int size;
 int filled;
 int max;
 int sepCount;
 
-void printRow()
-{
-	printf("\nPrinting\n");
-	int i = 0;
-	for(i = 0; i < sepCount; ++i)
-	{
-		printf("%s ", out[order[i]]);
-	}
-	
-}
+void showRow();
 
 int Reading(){
 
 	_Bool colonNotEnded = false;
 	_Bool lastIt = false;
 	int curSep = 0;
-	int outFilled = 0;
 
 	filled = 0;
-	while(1){ 
+	while(1)
+	{ 
 		//printf("while\n");
-		int readed = read(0, inBuf + filled, size - filled);
+		int readed = read(0, inBuf + filled, max - filled);
 		if (readed == 0 || readed > max) {
 			//printf("readed 0");
 			if(filled == 0)
@@ -48,68 +38,76 @@ int Reading(){
 				lastIt = true;
 			}
 		}
-		else
-		{
-			//printf("Was Not Printed false\n");
-			//wasNotPrinted = false;
-		}
-
 		
-		int curLen = filled + readed;
-		filled = curLen;
-		//printf("curLen:%d+%d\n", filled , readed);
-
-		int cWord = 0;
-		int i = 0;
+		filled += readed;
 		
 		char * s = strstr(inBuf, sep[curSep]);
-		
-		if(s == NULL)
+		while(s != NULL)
 		{
-			if(curLen < max)
-			{
-				if(!lastIt)
-				{
-					continue;
-				}
-				else
-				{
-					return -1;
-				}
-			}
-			else
-			{
-				return -1;
-			}
-		} 
-		else 
-		{
+
 			int i = 0;
 			int sPos = s - inBuf;
-			printf("sPos:%d", sPos);
+			printf("sepPos:%d\n", sPos);
 			for(i = 0; i < sPos; ++i)
 			{
 				out[curSep][i] = inBuf[i];
 			}
 			out[curSep][i] = '\0';
-			outFilled = 0;
-			filled = curLen - (sPos + sepLen[curSep]);
+			printf("out[%d]:%s\n",curSep, out[curSep]);
+			
+			filled = filled - (sPos + sepLen[curSep]);
 			memmove(inBuf, s + sepLen[curSep], filled);
 			
-		    
+			printf("inBuf:%s\n", inBuf);
+			
 			if(curSep == sepCount - 1)
 			{
-				printRow();
+				showRow();
+				printf("ok6");
+				curSep = 0;
 			}
 			else
 			{
 				curSep++;
 			}
-			
+
+			s = strstr(inBuf, sep[curSep]);	
 		}
+		
+		if(!lastIt && filled < max)
+		{
+			//continue;
+		}
+		else
+		{
+			return -1;
+		}
+		
+		
 	}
 		
 	return 1;
+}
+
+void showRow()
+{
+	printf("ok7");
+	printf("ok7.3");
+	
+	int i;
+	for(i = 0; i < sepCount; ++i)
+	{
+		printf("ok8");
+		printf("%s ", out[i]);
+		printf("ok9");
+	}
+
+	printf("ok10");
+	for(i = 0; i < sepCount; ++i)
+	{
+		printf("%s ", out[order[i]]);
+	}
+	
 }
 
 
@@ -138,7 +136,6 @@ int main(int argc, char * argv[])
 		sepLen = malloc(sepCount);
 		order = malloc(sepCount);
 		max = 128;
-		size = max;
 		
 		for(i = 0; i < sepCount; ++i)
 		{
@@ -175,6 +172,7 @@ int main(int argc, char * argv[])
 	else
 	{
 		printf("wrong Args!\n");
+		return 0;
 	}
 	
 	
@@ -187,7 +185,7 @@ int main(int argc, char * argv[])
 	}
 
 
-	inBuf = malloc(size);
+	inBuf = malloc(max);
 	//outBuf = malloc(size);
 
 	Reading(); 
