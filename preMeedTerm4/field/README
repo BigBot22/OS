@@ -1,0 +1,7 @@
+os  MeedTerm2 task2 "fielder"
+
+In args: <separator1 separator2 ... separatorN> ";" <order1 order2 ... orderN>
+
+To run >> ./a.out 1 2 3 ";" 2 3 1   
+aaa1bb2cccc3
+>>bb cccc aaa
